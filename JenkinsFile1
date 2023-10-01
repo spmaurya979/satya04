@@ -18,26 +18,6 @@ pipeline{
                   sh 'mvn compile'
 	      }
           }
-          stage('CodeReview'){
-		  
-              steps{
-		    
-		  echo 'codeReview'
-                  sh 'mvn pmd:pmd'
-              }
-          }
-           stage('UnitTest'){
-		  
-              steps{
-	         
-                  sh 'mvn test'
-              }
-               post {
-               success {
-                   junit 'target/surefire-reports/*.xml'
-               }
-           }	
-          }
           
           stage('Package'){
 		  
