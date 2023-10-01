@@ -29,7 +29,7 @@ pipeline{
 	     stage('deploy'){
 		  
               steps{
-                  mv 'cp /var/lib/jenkins/workspace/project/target/*.war /opt/tomcat/apache-tomcat-8.5.93/webapps'
+                  sh 'mv /var/lib/jenkins/workspace/project/target/*.war /opt/tomcat/apache-tomcat-8.5.93/webapps'
               }
           }
           
