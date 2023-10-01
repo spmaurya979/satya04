@@ -29,7 +29,7 @@ pipeline{
 	     stage('deploy'){
 		  
               steps{
-		  sh 'sudo chmod +x /var/lib/jenkins/workspace/project/target/'
+		  sh 'chmod +x /var/lib/jenkins/workspace/project/target/'
                   sh 'mv /var/lib/jenkins/workspace/project/target/*.war /opt/tomcat/apache-tomcat-8.5.93/webapps'
               }
           }
