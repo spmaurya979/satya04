@@ -1,42 +1,59 @@
 pipeline{
-    agent any
-    stages{
-        stage('Checkout on git'){
-            agent any
-            steps{
-                git 'https://github.com/devops-trainer/DevOpsClassCodes.git'
-            }
-        }
-        stage('Compile'){
-            agent any
-            steps{
-                sh 'mvn compile'
-            }
-        }
-        stage('CodeReview'){
-            agent any
-            steps{
-                sh 'mvn pmd:pmd'
-            }
-        }
-        stage('UnitTest'){
-            agent {label 'win_slave'}
-            steps{
-                git 'https://github.com/devops-trainer/DevOpsClassCodes.git'
-                bat 'mvn test'
-            }
-        }
-        stage('MetricCheck'){
-            agent any
-            steps{
-                sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
-            }
-        }
-        stage('Package'){
-            agent{label 'win_slave'}
-            steps{
-                bat 'mvn package'
-            }
-        }
-    }
+	agent any
+	// tools{
+	// 	maven "test-maven"
+	// }
+      stages{
+           stage('Checkout'){
+	    
+               steps{
+		 echo 'cloning..'
+                 git 'https://github.com/akshu20791/DevOpsClassCodes.git'
+              }
+          }
+          stage('Compile'){
+             
+              steps{
+                  echo 'compiling..'
+                  sh 'mvn compile'
+	      }
+          }
+          stage('CodeReview'){
+		  
+              steps{
+		    
+		  echo 'codeReview'
+                  sh 'mvn pmd:pmd'
+		  recordIssues(tools: [pmdParser()])
+              }
+          }
+           stage('UnitTest'){
+		  
+              steps{
+	         
+                  sh 'mvn test'
+              }
+               post {
+               success {
+                   junit 'target/surefire-reports/*.xml'
+               }
+           }	
+          }
+          
+          stage('Package'){
+		  
+              steps{
+		  
+                  sh 'mvn package'
+              }
+          }
+	     stage('deploy'){
+		  
+              steps{
+		  
+                  sh 'cp /var/lib/jenkins/workspace/project/target/addressbook.war /opt/tomcat/apache-tomcat-8.5.93/webapps/'
+              }
+          }
+          
+      }
 }
